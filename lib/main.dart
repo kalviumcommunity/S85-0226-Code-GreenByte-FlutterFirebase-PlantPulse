@@ -1,70 +1,60 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(PlantPulseApp());
+  runApp(const PlantPulseApp());
 }
 
 class PlantPulseApp extends StatelessWidget {
+  const PlantPulseApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'PlantPulse',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      home: PlantCounterScreen(),
+      theme: ThemeData(primarySwatch: Colors.green),
+      home: const WelcomeScreen(),
     );
   }
 }
 
-class PlantCounterScreen extends StatefulWidget {
+class WelcomeScreen extends StatefulWidget {
+  const WelcomeScreen({super.key});
+
   @override
-  _PlantCounterScreenState createState() => _PlantCounterScreenState();
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
 }
 
-class _PlantCounterScreenState extends State<PlantCounterScreen> {
-  int plantCount = 0;
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  bool isClicked = false;
 
-  void addPlant() {
+  void toggleMessage() {
     setState(() {
-      plantCount++;
-    });
-  }
-
-  void removePlant() {
-    setState(() {
-      if (plantCount > 0) {
-        plantCount--;
-      }
+      isClicked = !isClicked;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("🌱 PlantPulse Counter Demo"),
-      ),
+      appBar: AppBar(title: const Text('PlantPulse')),
       body: Center(
-        child: Text(
-          "Plants Tracked: $plantCount",
-          style: TextStyle(fontSize: 24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              isClicked ? "Let's grow together 🌱" : "Welcome to PlantPulse",
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            const Icon(Icons.local_florist, size: 100, color: Colors.green),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: toggleMessage,
+              child: const Text('Tap Me'),
+            ),
+          ],
         ),
-      ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: addPlant,
-            child: Icon(Icons.add),
-          ),
-          SizedBox(height: 10),
-          FloatingActionButton(
-            onPressed: removePlant,
-            child: Icon(Icons.remove),
-          ),
-        ],
       ),
     );
   }
