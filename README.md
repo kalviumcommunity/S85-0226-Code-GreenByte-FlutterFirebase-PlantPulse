@@ -303,6 +303,16 @@ flutter run -d ios
 
 ---
 
+
+## 📸 Setup Verification Screenshots
+
+### Flutter Doctor Output
+![Flutter Doctor](assets/setup/flutter-doctor.png)
+
+### Running App on Emulator
+![App Running](assets/setup/app-running.png)
+
+
 ## 👥 Team Members
 
 - **Madhav Garg**
