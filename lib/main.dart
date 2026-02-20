@@ -18,14 +18,29 @@ void main() async {
   runApp(const PlantPulseApp());
 }
 
-class PlantPulseApp extends StatelessWidget {
+class PlantPulseApp extends StatefulWidget {
   const PlantPulseApp({super.key});
+
+  @override
+  State<PlantPulseApp> createState() => _PlantPulseAppState();
+}
+
+class _PlantPulseAppState extends State<PlantPulseApp> {
+  // State variable for dark mode
+  bool _isDarkMode = false;
+
+  void toggleTheme() {
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'PlantPulse',
+      // Theme changes reactively based on _isDarkMode state
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF1B5E20),
@@ -33,78 +48,11 @@ class PlantPulseApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: const Color(0xFFF6F8F7),
         useMaterial3: true,
-        textTheme: GoogleFonts.interTextTheme().copyWith(
-          displayLarge: GoogleFonts.inter(
-            fontSize: 28,
-            fontWeight: FontWeight.w600,
-            color: const Color(0xFF111111),
-          ),
-          headlineMedium: GoogleFonts.inter(
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-            color: const Color(0xFF111111),
-          ),
-          bodyLarge: GoogleFonts.inter(
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-            color: const Color(0xFF111111),
-          ),
-          bodyMedium: GoogleFonts.inter(
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-            color: const Color(0xFF6B7280),
-          ),
-          bodySmall: GoogleFonts.inter(
-            fontSize: 13,
-            fontWeight: FontWeight.w400,
-            color: const Color(0xFF6B7280),
-          ),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF1B5E20),
-            foregroundColor: Colors.white,
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          ),
-        ),
-        cardTheme: CardTheme(
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          color: Colors.white,
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          filled: true,
-          fillColor: Colors.grey.shade50,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(color: Color(0xFF1B5E20), width: 2),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(color: Color(0xFFE53935)),
-          ),
-          labelStyle: const TextStyle(color: Color(0xFF6B7280)),
-          prefixIconColor: const Color(0xFF1B5E20),
-        ),
       ),
       initialRoute: '/',
       routes: {
         '/': (context) => const AuthWrapper(),
-        '/login': (context) => const EnhancedLoginScreen(),
+        '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignupScreen(),
         '/home': (context) => const ResponsiveHome(),
         '/widget_demo': (context) => const WidgetTreeDemo(),
@@ -114,7 +62,9 @@ class PlantPulseApp extends StatelessWidget {
 }
 
 class AuthWrapper extends StatelessWidget {
-  const AuthWrapper({super.key});
+  final VoidCallback toggleTheme;
+  
+  const AuthWrapper({super.key, required this.toggleTheme});
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +82,7 @@ class AuthWrapper extends StatelessWidget {
         }
         
         if (snapshot.hasData) {
-          return EnhancedDashboardScreen(user: snapshot.data!);
+          return DashboardScreen(user: snapshot.data!);
         } else {
           return const EnhancedLoginScreen();
         }

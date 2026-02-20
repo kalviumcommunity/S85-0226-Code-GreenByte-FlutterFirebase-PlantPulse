@@ -7,8 +7,9 @@ import 'widget_tree_demo.dart';
 
 class DashboardScreen extends StatefulWidget {
   final User user;
+  final VoidCallback toggleTheme;
   
-  const DashboardScreen({super.key, required this.user});
+  const DashboardScreen({super.key, required this.user, required this.toggleTheme});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -70,6 +71,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
         title: const Text('PlantPulse Dashboard'),
         backgroundColor: Colors.green,
         actions: [
+          // Theme toggle button - demonstrates reactive UI
+          IconButton(
+            icon: const Icon(Icons.brightness_6),
+            tooltip: 'Toggle Theme',
+            onPressed: widget.toggleTheme,
+          ),
           IconButton(
             icon: const Icon(Icons.code),
             onPressed: () {
@@ -84,6 +91,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           IconButton(
             icon: const Icon(Icons.logout),
+            tooltip: 'Logout',
             onPressed: _logout,
           ),
         ],
