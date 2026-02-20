@@ -7,9 +7,9 @@ import 'widget_tree_demo.dart';
 
 class DashboardScreen extends StatefulWidget {
   final User user;
-  final VoidCallback toggleTheme;
+  final VoidCallback? toggleTheme;
   
-  const DashboardScreen({super.key, required this.user, required this.toggleTheme});
+  const DashboardScreen({super.key, required this.user, this.toggleTheme});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();

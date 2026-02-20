@@ -4,10 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'firebase_options.dart';
 import 'screens/responsive_home.dart';
-import 'screens/enhanced_login_screen.dart';
-import 'screens/signup_screen.dart';
-import 'screens/enhanced_dashboard_screen.dart';
+import 'screens/premium_login_screen.dart';
+import 'screens/premium_signup_screen.dart';
+import 'screens/premium_dashboard_screen.dart';
 import 'screens/widget_tree_demo.dart';
+import 'screens/stateless_stateful_demo.dart';
 import 'services/firebase_service.dart';
 
 void main() async {
@@ -18,29 +19,14 @@ void main() async {
   runApp(const PlantPulseApp());
 }
 
-class PlantPulseApp extends StatefulWidget {
+class PlantPulseApp extends StatelessWidget {
   const PlantPulseApp({super.key});
-
-  @override
-  State<PlantPulseApp> createState() => _PlantPulseAppState();
-}
-
-class _PlantPulseAppState extends State<PlantPulseApp> {
-  // State variable for dark mode
-  bool _isDarkMode = false;
-
-  void toggleTheme() {
-    setState(() {
-      _isDarkMode = !_isDarkMode;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'PlantPulse',
-      // Theme changes reactively based on _isDarkMode state
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF1B5E20),
@@ -48,23 +34,89 @@ class _PlantPulseAppState extends State<PlantPulseApp> {
         ),
         scaffoldBackgroundColor: const Color(0xFFF6F8F7),
         useMaterial3: true,
+        textTheme: GoogleFonts.interTextTheme().copyWith(
+          displayLarge: GoogleFonts.inter(
+            fontSize: 28,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xFF111111),
+          ),
+          headlineMedium: GoogleFonts.inter(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+            color: const Color(0xFF111111),
+          ),
+          bodyLarge: GoogleFonts.inter(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            color: const Color(0xFF111111),
+          ),
+          bodyMedium: GoogleFonts.inter(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: const Color(0xFF6B7280),
+          ),
+          bodySmall: GoogleFonts.inter(
+            fontSize: 13,
+            fontWeight: FontWeight.w400,
+            color: const Color(0xFF6B7280),
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF1B5E20),
+            foregroundColor: Colors.white,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          ),
+        ),
+        cardTheme: CardThemeData(
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          color: Colors.white,
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: Colors.grey.shade50,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFF1B5E20), width: 2),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFFE53935)),
+          ),
+          labelStyle: const TextStyle(color: Color(0xFF6B7280)),
+          prefixIconColor: const Color(0xFF1B5E20),
+        ),
       ),
       initialRoute: '/',
       routes: {
         '/': (context) => const AuthWrapper(),
-        '/login': (context) => const LoginScreen(),
-        '/signup': (context) => const SignupScreen(),
+        '/login': (context) => const PremiumLoginScreen(),
+        '/signup': (context) => const PremiumSignupScreen(),
         '/home': (context) => const ResponsiveHome(),
         '/widget_demo': (context) => const WidgetTreeDemo(),
+        '/stateless_stateful_demo': (context) => const StatelessStatefulDemo(),
       },
     );
   }
 }
 
 class AuthWrapper extends StatelessWidget {
-  final VoidCallback toggleTheme;
-  
-  const AuthWrapper({super.key, required this.toggleTheme});
+  const AuthWrapper({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -82,78 +134,11 @@ class AuthWrapper extends StatelessWidget {
         }
         
         if (snapshot.hasData) {
-          return DashboardScreen(user: snapshot.data!);
+          return PremiumDashboardScreen(user: snapshot.data!);
         } else {
-          return const EnhancedLoginScreen();
+          return const PremiumLoginScreen();
         }
       },
-    );
-  }
-}
-
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  int counter = 0;
-
-  void incrementCounter() {
-    setState(() {
-      counter++;
-    });
-  }
-
-  void decrementCounter() {
-    setState(() {
-      if (counter > 0) counter--;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('PlantPulse Counter'),
-        centerTitle: true,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'You have pressed the button:',
-              style: TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              '$counter',
-              style: const TextStyle(
-                fontSize: 48,
-                fontWeight: FontWeight.bold,
-                color: Colors.green,
-              ),
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: incrementCounter,
-            child: const Icon(Icons.add),
-          ),
-          const SizedBox(height: 10),
-          FloatingActionButton(
-            onPressed: decrementCounter,
-            child: const Icon(Icons.remove),
-          ),
-        ],
-      ),
     );
   }
 }
