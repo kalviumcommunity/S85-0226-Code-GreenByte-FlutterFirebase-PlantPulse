@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'firebase_options.dart';
+import 'services/notification_service.dart';
 import 'screens/home_screen.dart';
 import 'screens/about_screen.dart';
 import 'screens/profile_screen.dart';
@@ -10,20 +11,21 @@ import 'screens/plant_demo_screen.dart';
 import 'screens/premium_login_screen.dart';
 import 'screens/premium_signup_screen.dart';
 import 'screens/dashboard.dart';
-import 'screens/responsive_layout.dart';
-import 'screens/user_input_form.dart';
-import 'screens/custom_widgets_demo.dart';
-import 'screens/mediaquery_layoutbuilder_demo.dart';
 import 'screens/animation_demo.dart';
 import 'screens/splash_screen.dart';
 import 'screens/firestore_demo_screen.dart';
 import 'screens/image_upload_screen.dart';
+import 'screens/push_notification_demo_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  
+  // Initialize notification service
+  await NotificationService().initialize();
+  
   runApp(const PlantPulseApp());
 }
 
@@ -35,6 +37,7 @@ class PlantPulseApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'PlantPulse',
+      navigatorKey: navigatorKey, // Add navigator key for notification navigation
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF1B5E20),
@@ -115,7 +118,6 @@ class PlantPulseApp extends StatelessWidget {
         '/': (context) => const AuthWrapper(),
         '/login': (context) => const PremiumLoginScreen(),
         '/signup': (context) => const PremiumSignupScreen(),
-        '/demo': (context) => const CustomWidgetsDemo(),
         '/home': (context) {
           final user = ModalRoute.of(context)!.settings.arguments as User?;
           return user != null ? HomeScreen(user: user) : const AuthWrapper();
@@ -130,15 +132,13 @@ class PlantPulseApp extends StatelessWidget {
         },
         '/about': (context) => const AboutScreen(),
         '/plant_demo': (context) => const PlantDemoScreen(),
-        '/responsive': (context) => const ResponsiveLayout(),
-        '/user-form': (context) => const UserInputForm(),
-        '/adaptive-demo': (context) => const AdaptiveDemoScreen(),
         '/animation-demo': (context) => const AnimationDemo(),
         '/firestore-demo': (context) => const FirestoreDemoScreen(),
         '/image-upload': (context) {
           final user = ModalRoute.of(context)!.settings.arguments as User?;
           return user != null ? ImageUploadScreen(user: user) : const AuthWrapper();
         },
+        '/push-notifications': (context) => const PushNotificationDemoScreen(),
       },
     );
   }
